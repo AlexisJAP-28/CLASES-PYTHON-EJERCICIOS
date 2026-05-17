@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(caveman)",
+      "Bash(python clase_01_condicionales.py)",
+      "Bash(python clase_02_bucles_for.py)",
+      "Bash(python clase_03_bucles_while.py)",
+      "Bash(python clase_04_integrador.py)",
+      "Bash(python -c \"import ast; [ast.parse\\(open\\(f, encoding='utf-8'\\).read\\(\\)\\) for f in ['practica_01_condicionales.py','practica_02_bucles_for.py','practica_03_bucles_while.py','practica_04_integrador.py']]; print\\('sintaxis OK'\\)\")",
+      "Bash(python -c \"import ast; [ast.parse\\(open\\(f, encoding='utf-8'\\).read\\(\\)\\) for f in ['practica_01_condicionales.py','practica_02_bucles_for.py','practica_03_bucles_while.py','practica_04_integrador.py']]\")"
+    ]
+  }
+}
