@@ -1,0 +1,127 @@
+# PEA1
+# Estudiante: Alexis Javier Añamise Paucar
+# Fecha: 30/06/2026
+# Asignatura: Lenguaje de Programación Python
+# Propósito: Sistema de inventario de dispositivos de red.
+# Mención: Se utilizó IA como apoyo.
+
+
+# ======================================================
+# TIPO 1: FUNCIÓN SUELTA (fuera de cualquier clase)
+# ======================================================
+# Imprimir 3 lineas decorativas con el titulo del sistema
+def imprimir_banner():
+    print("****************************************")
+    print("       INVENTARIO DE DISPOSITIVOS      ")
+    print("****************************************")
+
+
+# ======================================================
+# CLASE PRINCIPAL
+# ======================================================
+class Dispositivo:
+    # Constructor
+    def __init__(self, ip, modelo, ubicacion): # Su función es inicializar los atributos del objeto cuando se crea.
+        self.modelo = modelo
+        self.ubicacion = ubicacion
+        self.ip = ip  #llama automáticamente al setter
+
+    # ==================================================
+    # TIPO 3: PROPERTY (con validación)
+    # ==================================================
+    @property #Sirve para proteger un atributo.
+    def ip(self):
+        return self._ip
+
+    # setter
+    @ip.setter # Es donde se valida que la IP tenga: 4 octetos, números, entre 0 y 255
+    def ip(self, valor): # validación que la dirección IP sea correcta
+        partes = valor.split(".")
+        # Validación de ip
+        if len(partes) != 4:
+            raise ValueError("IP invalida: " + valor) # si falla
+
+        for p in partes:
+            if not p.isdigit():
+                raise ValueError("IP invalida: " + valor) # si falla
+            numero = int(p)
+
+            if numero < 0 or numero > 255:
+                raise ValueError("IP invalida: " + valor) # si falla
+
+        self._ip = valor
+
+
+    # ==================================================
+    # TIPO 2: MÉTODO NORMAL
+    # ==================================================
+    def reportar(self): # Usa self porque trabaja con los datos del objeto.
+        print("\nDispositivo") # salida
+        print("IP:", self.ip) # salida
+        print("Modelo:", self.modelo) # salida
+        print("Ubicación:", self.ubicacion) # salida
+
+
+    # ==================================================
+    # TIPO 4: STATIC METHOD
+    # ==================================================
+    @staticmethod # No necesita self, no necesita cls, solo recibe una IP
+    def es_ip_privada(ip): # determina si una dirección IP pertenece a un rango privado
+        # Devuelve True o false
+        if ip.startswith("10."):
+            return True
+        if ip.startswith("192.168."):
+            return True
+        partes = ip.split(".")
+        if len(partes) == 4:
+            if partes[0] == "172":
+                segundo = int(partes[1])
+                if 16 <= segundo <= 31:
+                    return True
+        return False
+
+
+    # ==================================================
+    # TIPO 5: CLASS METHOD
+    # ==================================================
+    @classmethod # decorador que convierte un método en un método de clase
+    def desde_csv(cls, linea): # crea un objeto a partir de una línea de texto en formato CSV.
+        # se obtiene
+        ip, modelo, ubicacion = linea.split(",")
+        ip = ip.strip()
+        modelo = modelo.strip()
+        ubicacion = ubicacion.strip()
+
+        return cls(ip, modelo, ubicacion) # crea un nuevo objeto y lo devuelve.
+
+
+# ======================================================
+# PROGRAMA PRINCIPAL
+# ======================================================
+if __name__ == "__main__":
+    imprimir_banner()
+
+    # Creación de  dispositivos manualmente
+    d1 = Dispositivo("10.0.0.1", "Cisco-2960", "DC-A")
+
+    # Creación de dispositivo desde CSV
+    d2 = Dispositivo.desde_csv(  "192.168.1.1, MikroTik, Oficina")
+
+    # Reportar ambos
+    d1.reportar()
+    d2.reportar()
+
+    # Probar método estático - Dispositivo.es_ip_privada
+    print("\n¿10.0.0.5 es privada?",
+          Dispositivo.es_ip_privada("10.0.0.5"))
+    print("¿8.8.8.8 es privada?",
+          Dispositivo.es_ip_privada("8.8.8.8"))
+
+    # Probar IP inválida - IP invalida con try/except
+    try:
+        d3 = Dispositivo( "999.0.0.1", "Router", "Laboratorio")
+    except ValueError as e:
+        print("\nError capturado:", e)
+
+# CIERRE DEL PROGRAMA
+# FIN DEL EJERCICIO PEA1
